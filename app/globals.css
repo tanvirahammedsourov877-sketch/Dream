@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 204 47% 97%;
+    --foreground: 205 42% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 205 42% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 205 42% 15%;
+    --primary: 43 96% 52%;
+    --primary-foreground: 205 42% 15%;
+    --secondary: 45 100% 92%;
+    --secondary-foreground: 205 42% 15%;
+    --muted: 204 35% 93%;
+    --muted-foreground: 204 15% 43%;
+    --accent: 43 100% 62%;
+    --accent-foreground: 205 42% 15%;
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 204 25% 85%;
+    --input: 204 25% 85%;
+    --ring: 43 96% 52%;
+    --radius: 0.5rem;
+  }
+
+  *, ::before, ::after {
+    @apply border-border;
+    font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+  }
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-serif;
+    font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+  }
+  input, button, select, textarea, optgroup {
+    font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+}
