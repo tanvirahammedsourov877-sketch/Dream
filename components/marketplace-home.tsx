@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, MouseEvent as ReactMouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -377,6 +377,7 @@ export default function MarketplaceHome() {
   const [scrolled, setScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [heroHoverDirection, setHeroHoverDirection] = useState<'left' | 'right' | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -394,6 +395,10 @@ export default function MarketplaceHome() {
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  const handleHeroPointerMove = (event: ReactMouseEvent<HTMLDivElement>) => {
+    const midpoint = event.currentTarget.getBoundingClientRect().left + event.currentTarget.clientWidth / 2;
+    setHeroHoverDirection(event.clientX < midpoint ? 'left' : 'right');
+  };
 
   useEffect(() => {
     const loaded = getLocalProducts();
@@ -666,12 +671,26 @@ export default function MarketplaceHome() {
             </div>
           </div>
 
-          <div className="relative min-h-[390px] sm:min-h-[500px] lg:min-h-[580px]">
+          <div
+            className="relative min-h-[390px] sm:min-h-[500px] lg:min-h-[580px]"
+            onMouseMove={handleHeroPointerMove}
+            onMouseLeave={() => setHeroHoverDirection(null)}
+          >
             <div className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#bfdbfe] bg-[#eff6ff] shadow-[0_30px_100px_rgba(29,78,216,0.12)]" />
             {[0, 1, 2].map((offset) => {
               const slide = HERO_SLIDES[(currentSlide + offset) % HERO_SLIDES.length];
+              const hoverShift = heroHoverDirection === 'left' ? -26 + offset * 5 : heroHoverDirection === 'right' ? 26 - offset * 5 : 0;
+              const cardTransform = offset === 0
+                ? `translate(${hoverShift}px, -50%) rotate(-6deg)`
+                : offset === 1
+                  ? `translate(calc(-50% + ${hoverShift}px), -50%) scale(1.1)`
+                  : `translate(${hoverShift}px, -50%) rotate(6deg)`;
               return (
-                <div key={slide.id} className={`absolute top-1/2 w-[46%] overflow-hidden rounded-[22px] border border-white bg-white p-2 shadow-[0_24px_55px_rgba(30,64,175,0.18)] transition-all duration-700 ${offset === 0 ? 'left-[7%] -translate-y-1/2 -rotate-6 opacity-90' : offset === 1 ? 'left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 scale-110' : 'right-[7%] -translate-y-1/2 rotate-6 opacity-90'}`}>
+                <div
+                  key={slide.id}
+                  style={{ transform: cardTransform }}
+                  className={`absolute top-1/2 w-[46%] overflow-hidden rounded-[22px] border border-white bg-white p-2 shadow-[0_24px_55px_rgba(30,64,175,0.18)] transition-all duration-700 ${offset === 0 ? 'left-[7%] opacity-90' : offset === 1 ? 'left-1/2 z-10' : 'right-[7%] opacity-90'}`}
+                >
                   <div className="relative aspect-[0.82] overflow-hidden rounded-[16px] bg-[#dbeafe]">
                     <img src={slide.image} alt={slide.title} className="h-full w-full object-cover opacity-80 mix-blend-multiply" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0b1020]/80 via-transparent to-[#38bdf8]/15" />
