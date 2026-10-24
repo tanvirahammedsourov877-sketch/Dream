@@ -3,15 +3,16 @@ import type { Metadata } from 'next';
 import { AuthProvider } from '@/lib/auth-context';
 
 export const metadata: Metadata = {
-  title: 'Webnibo | Digital Marketplace & Templates',
-  description: 'A curated marketplace for beautiful website templates, graphics, and digital tools.',
+  metadataBase: new URL('https://webnibo.example.com'),
+  title: 'Webnibo | Premium Website Templates & Digital Marketplace',
+  description: 'A curated marketplace for premium website templates, UI kits, and digital products. Find the perfect starting point for your next project.',
   icons: {
     icon: '/webnibo.png',
     shortcut: '/webnibo.png',
     apple: '/webnibo.png',
   },
   openGraph: {
-    title: 'Webnibo | Digital Marketplace & Templates',
+    title: 'Webnibo | Premium Website Templates & Digital Marketplace',
     description: 'Find the right starting point for your next digital project.',
     images: [{ url: '/webnibo.png' }],
   },
@@ -20,12 +21,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="font-serif antialiased" style={{ fontFamily: '"Times New Roman", Times, Baskerville, Georgia, serif' }}>
-        <AuthProvider>
-          <div style={{ fontFamily: '"Times New Roman", Times, Baskerville, Georgia, serif' }}>
-            {children}
-          </div>
-        </AuthProvider>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-sans antialiased">
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

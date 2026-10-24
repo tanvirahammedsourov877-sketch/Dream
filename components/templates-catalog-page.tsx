@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useRef, useState, Suspense } from 'react';
+import { FormEvent, useEffect, useMemo, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -22,21 +22,16 @@ import {
   Search,
   ShoppingCart,
   SlidersHorizontal,
+  Sparkles,
   Star,
   Sofa,
   Grid3x3,
   User,
   X,
-  CreditCard,
-  ShieldCheck,
-  Download,
   CheckCircle2,
 } from 'lucide-react';
 import { getLocalProducts, INITIAL_PRODUCTS } from '@/lib/products-store';
 import {
-  saveLocalOrder,
-  getLocalCoupons,
-  saveLocalCoupon,
   saveLocalSubscriber,
   type Coupon,
   type Order,
@@ -68,19 +63,14 @@ function ProductCard({
   onPreview: (product: Product) => void;
   onAdd: (product: Product) => void;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
   const previewUrl = `/preview/${product.id}`;
   const liveUrl = product.liveUrl ? product.liveUrl : previewUrl;
 
   return (
-    <article
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-300 hover:border-slate-300 hover:shadow-xl hover:-translate-y-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 flex items-center justify-center">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-orange-200">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
         {product.imageFit === 'contain' && (
           <img
             src={product.image}
@@ -89,105 +79,101 @@ function ProductCard({
             className="absolute inset-0 h-full w-full object-cover opacity-20 blur-md scale-110 pointer-events-none"
           />
         )}
-
         <img
           src={product.image}
           alt={product.title}
           style={{
             objectFit: product.imageFit || 'cover',
             objectPosition: product.imagePosition || 'center',
-            transform:
-              product.imageScale && product.imageScale !== 100
-                ? `scale(${product.imageScale / 100})`
-                : undefined,
+            transform: product.imageScale && product.imageScale !== 100 ? `scale(${product.imageScale / 100})` : undefined,
           }}
-          className={`relative z-10 h-full w-full transition duration-500 group-hover:scale-105 ${
-            isHovered ? 'opacity-95' : 'opacity-100'
-          }`}
+          className="relative z-10 h-full w-full transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
 
-        {product.badge && (
-          <span className="absolute left-3 top-3 z-20 rounded-md bg-slate-950/80 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white backdrop-blur-md">
-            {product.badge}
-          </span>
-        )}
-
-        <button
-          type="button"
-          onClick={() => setFavorite(!favorite)}
-          aria-label={favorite ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute right-3 top-3 z-20 grid h-8 w-8 place-items-center rounded-full transition ${
-            favorite
-              ? 'bg-red-500 text-white'
-              : 'bg-white/90 text-slate-700 hover:bg-white hover:text-red-500'
-          }`}
-        >
-          <Heart className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`} />
-        </button>
-      </div>
-
-      <div className="flex flex-1 flex-col px-2.5 sm:px-4 pt-2.5 sm:pt-4 pb-2.5 sm:pb-4">
-        <div>
-          <div className="flex items-center gap-1.5">
-            <h3 className="line-clamp-2 font-semibold text-slate-900 group-hover:text-amber-600 transition text-xs sm:text-sm">
-              {product.title}
-            </h3>
-          </div>
-          <p className="mt-0.5 line-clamp-1 text-[11px] sm:text-xs text-slate-500">{product.type}</p>
-        </div>
-
-        <div className="mt-2 sm:mt-2.5 flex items-center justify-between border-t border-slate-100 pt-1.5 sm:pt-2.5">
-          <div className="flex items-center gap-0.5 sm:gap-1 text-xs text-amber-500">
-            <Star className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 fill-current" />
-            <span className="font-semibold text-slate-700 text-[10px] sm:text-xs">4.9</span>
-          </div>
-          <span className="text-sm sm:text-base font-extrabold text-slate-900">
-            {product.free ? (
-              <span className="text-emerald-700">Free</span>
-            ) : (
-              `$${product.price}`
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
+          <div className="flex flex-col gap-1.5">
+            {product.badge && (
+              <span className="rounded-lg bg-slate-900/85 backdrop-blur-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                {product.badge}
+              </span>
             )}
-          </span>
+            {product.free && (
+              <span className="rounded-lg bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white shadow-sm">
+                Free
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setFavorite(!favorite)}
+            aria-label={favorite ? 'Remove from wishlist' : 'Add to wishlist'}
+            className="grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all hover:scale-110"
+          >
+            <Heart className={`h-4 w-4 transition-colors ${favorite ? 'fill-rose-500 text-rose-500' : 'text-slate-500'}`} />
+          </button>
         </div>
 
-        <div className="mt-2.5 sm:mt-3 flex flex-col gap-1.5 sm:gap-2">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex translate-y-full items-center bg-gradient-to-t from-slate-900/80 to-transparent px-3 pb-3 pt-8 transition-transform duration-300 group-hover:translate-y-0">
           <a
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-8 sm:h-9.5 w-full items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-sky-500 bg-sky-50/70 text-[11px] sm:text-sm font-bold text-sky-700 shadow-xs transition-all duration-200 hover:border-sky-600 hover:bg-sky-600 hover:text-white hover:shadow-sm active:scale-98"
-            title="Open live preview demo in new tab"
+            className="flex h-9 w-full items-center justify-center gap-1.5 text-xs font-semibold text-white"
           >
             <ExternalLink className="h-3.5 w-3.5" />
-            <span>Live Demo</span>
+            Live Demo
           </a>
+        </div>
+      </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <button
-              type="button"
-              onClick={() => onAdd(product)}
-              className="group/btn flex h-8 sm:h-9.5 flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-amber-400 px-2 sm:px-3 text-xs sm:text-sm font-bold text-slate-950 shadow-sm shadow-amber-400/20 transition-all duration-200 hover:bg-amber-300 hover:shadow-md hover:shadow-amber-400/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
-            >
-              <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform duration-200 group-hover/btn:scale-110" />
-              <span className="truncate">{product.free ? 'Get free template' : 'Add to cart'}</span>
-            </button>
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <div>
+          <h3
+            className="line-clamp-2 cursor-pointer text-sm font-semibold text-slate-900 transition hover:text-orange-600"
+            onClick={() => onPreview(product)}
+          >
+            {product.title}
+          </h3>
+          <p className="mt-1 truncate text-xs text-slate-500">{product.type}</p>
+        </div>
 
-            <button
-              type="button"
-              onClick={() => onPreview(product)}
-              title="Quick View"
-              aria-label={`Quick view ${product.title}`}
-              className="flex h-8 w-8 sm:h-9.5 sm:w-9.5 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-xs transition-all duration-200 hover:border-amber-400 hover:bg-amber-50/50 hover:text-amber-800 active:scale-95"
-            >
-              <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </button>
+        <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
+            ))}
+            <span className="ml-1 text-[11px] font-semibold text-slate-600">4.9</span>
           </div>
+          <span className="text-base font-bold text-slate-900">
+            {product.free ? <span className="text-emerald-600">Free</span> : `$${product.price}`}
+          </span>
+        </div>
+
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onAdd(product)}
+            className="group/btn flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-orange-500 text-xs font-semibold text-white shadow-sm shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-md active:scale-[0.98]"
+          >
+            <ShoppingCart className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-110" />
+            {product.free ? 'Get Free' : 'Add to Cart'}
+          </button>
+          <button
+            type="button"
+            onClick={() => onPreview(product)}
+            aria-label={`Quick view ${product.title}`}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 active:scale-95"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </article>
   );
 }
+
+const CATEGORY_LABELS = ['All products', 'Tiles', 'Real Estate', 'Furniture', 'Industrial', 'Cars & Bikes'];
 
 function TemplatesCatalogContent() {
   const searchParams = useSearchParams();
@@ -204,7 +190,6 @@ function TemplatesCatalogContent() {
   const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Sync category param if URL changes
   useEffect(() => {
     const cat = searchParams.get('category');
     if (cat) setActiveCategory(cat);
@@ -214,11 +199,8 @@ function TemplatesCatalogContent() {
 
   useEffect(() => {
     const loaded = getLocalProducts();
-    if (loaded && loaded.length > 0) {
-      setProducts(loaded);
-    } else {
-      setProducts(INITIAL_PRODUCTS);
-    }
+    if (loaded && loaded.length > 0) setProducts(loaded);
+    else setProducts(INITIAL_PRODUCTS);
     const onUpdate = () => {
       const up = getLocalProducts();
       setProducts(up && up.length > 0 ? up : INITIAL_PRODUCTS);
@@ -231,27 +213,18 @@ function TemplatesCatalogContent() {
     };
   }, []);
 
-
-
   const filteredProducts = useMemo(() => {
     const currentProducts = products && products.length > 0 ? products : INITIAL_PRODUCTS;
     const normalizedQuery = query.trim().toLowerCase();
     const matches = currentProducts.filter((product) => {
-      const matchesQuery =
-        !normalizedQuery ||
-        `${product.title} ${product.type} ${product.category}`
-          .toLowerCase()
-          .includes(normalizedQuery);
-      const matchesCategory =
-        activeCategory === 'All products' || product.category === activeCategory;
+      const matchesQuery = !normalizedQuery || `${product.title} ${product.type} ${product.category}`.toLowerCase().includes(normalizedQuery);
+      const matchesCategory = activeCategory === 'All products' || product.category === activeCategory;
       return matchesCategory && (!freeOnly || Boolean(product.free)) && matchesQuery;
     });
     return [...matches].sort((a, b) =>
-      sortBy === 'Price: low to high'
-        ? a.price - b.price
-        : sortBy === 'Price: high to low'
-        ? b.price - a.price
-        : 0
+      sortBy === 'Price: low to high' ? a.price - b.price
+      : sortBy === 'Price: high to low' ? b.price - a.price
+      : 0
     );
   }, [products, activeCategory, freeOnly, query, sortBy]);
 
@@ -265,10 +238,7 @@ function TemplatesCatalogContent() {
     }
     setCart((current) => {
       const existing = current.find((item) => item.product.id === product.id);
-      if (existing)
-        return current.map((item) =>
-          item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
+      if (existing) return current.map((item) => item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
       return [...current, { product, quantity: 1 }];
     });
     setCartOpen(true);
@@ -277,304 +247,167 @@ function TemplatesCatalogContent() {
   function changeQuantity(productId: string, amount: number) {
     setCart((current) =>
       current.flatMap((item) =>
-        item.product.id === productId
-          ? item.quantity + amount > 0
-            ? [{ ...item, quantity: item.quantity + amount }]
-            : []
-          : [item]
+        item.product.id === productId ? (item.quantity + amount > 0 ? [{ ...item, quantity: item.quantity + amount }] : []) : [item]
       )
     );
   }
 
-  // Checkout states
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [checkoutName, setCheckoutName] = useState('Alex Morrison');
-  const [checkoutEmail, setCheckoutEmail] = useState('alex.m@designstudio.io');
-  const [checkoutPayment, setCheckoutPayment] = useState<'Credit Card' | 'Stripe' | 'PayPal'>('Credit Card');
-  const [couponCodeInput, setCouponCodeInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
-  const [couponFeedback, setCouponFeedback] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
-  const [orderReceipt, setOrderReceipt] = useState<Order | null>(null);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-
-  const discountAmount = useMemo(() => {
-    if (!appliedCoupon) return 0;
-    if (appliedCoupon.discountType === 'percentage') {
-      return (cartTotal * appliedCoupon.discountValue) / 100;
-    }
-    return Math.min(appliedCoupon.discountValue, cartTotal);
-  }, [appliedCoupon, cartTotal]);
-
-  const finalTotal = Math.max(0, cartTotal - discountAmount);
-
-  function handleApplyCoupon(e: FormEvent) {
-    e.preventDefault();
-    const cleanCode = couponCodeInput.trim().toUpperCase();
-    if (!cleanCode) return;
-    const availableCoupons = getLocalCoupons();
-    const found = availableCoupons.find((c) => c.code.toUpperCase() === cleanCode);
-    if (!found) {
-      setCouponFeedback({ msg: 'Invalid coupon code.', type: 'error' });
-      return;
-    }
-    setAppliedCoupon(found);
-    setCouponFeedback({
-      msg: `Coupon "${found.code}" applied! (${found.discountType === 'percentage' ? `${found.discountValue}% off` : `$${found.discountValue} off`})`,
-      type: 'success',
-    });
-  }
-
-  function handleProcessCheckout(e: FormEvent) {
-    e.preventDefault();
-    if (!checkoutName.trim() || !checkoutEmail.trim() || !checkoutEmail.includes('@')) {
-      alert('Please enter a valid customer name and email.');
-      return;
-    }
-    setCheckoutLoading(true);
-    setTimeout(() => {
-      const orderTitle = cart.map((i) => `${i.product.title} (x${i.quantity})`).join(', ');
-      const newOrders = saveLocalOrder({
-        customerName: checkoutName.trim(),
-        customerEmail: checkoutEmail.trim(),
-        productTitle: orderTitle,
-        amount: finalTotal,
-        status: 'Completed',
-        paymentMethod: checkoutPayment,
-      });
-
-      if (appliedCoupon) {
-        saveLocalCoupon({
-          ...appliedCoupon,
-          usageCount: appliedCoupon.usageCount + 1,
-        });
-      }
-
-      const placedOrder = newOrders[0];
-      setCart([]);
-      setCheckoutOpen(false);
-      setAppliedCoupon(null);
-      setCouponCodeInput('');
-      setCouponFeedback(null);
-      setCheckoutLoading(false);
-      setOrderReceipt(placedOrder);
-    }, 500);
-  }
-
-  // Newsletter
   const [email, setEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   async function handleNewsletterSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail || !normalizedEmail.includes('@')) {
-      setNewsletterState('error');
-      return;
-    }
+    if (!normalizedEmail || !normalizedEmail.includes('@')) { setNewsletterState('error'); return; }
     setNewsletterState('loading');
     try {
       saveLocalSubscriber({ email: normalizedEmail, source: 'Catalog Page' });
       setNewsletterState('success');
       setEmail('');
-    } catch {
-      setNewsletterState('error');
-    }
+    } catch { setNewsletterState('error'); }
   }
 
+  const navLinks = [
+    { label: 'Home', value: 'All products', icon: Home, isHome: true },
+    { label: 'Tiles', value: 'Tiles', icon: Grid3x3 },
+    { label: 'Real Estate', value: 'Real Estate', icon: Home },
+    { label: 'Furniture', value: 'Furniture', icon: Sofa },
+    { label: 'Industrial', value: 'Industrial', icon: Factory },
+    { label: 'Cars & Bikes', value: 'Cars & Bikes', icon: Car },
+  ];
+
   return (
-    <main className="min-h-screen bg-[#f1f9fc]">
-      {/* Redesigned 4-Div Balanced Navbar */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white shadow-sm">
-        <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-2.5 sm:gap-4 lg:gap-6 xl:gap-8 px-4 sm:px-6 lg:px-8 py-1 sm:py-1.5">
-          {/* 1. Brand Logo */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <main className="min-h-screen bg-slate-50">
+      {/* ===== HEADER ===== */}
+      <header className="sticky top-0 z-40 glass border-b border-slate-200/60 shadow-sm">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 sm:gap-6 px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-slate-900 lg:hidden p-1 -ml-1 rounded-lg hover:bg-slate-100 transition"
+              className="text-slate-900 lg:hidden p-1.5 -ml-1 rounded-lg hover:bg-slate-100 transition"
               aria-label="Toggle navigation"
             >
               {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-
-            <Link href="/" className="flex shrink-0 items-center p-0 m-0 transition hover:opacity-95" aria-label="Webnibo Homepage">
-              <img
-                src="/webnibo.png"
-                alt="Webnibo"
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-transform duration-200 hover:scale-[1.02]"
-              />
+            <Link href="/" className="flex shrink-0 items-center transition hover:opacity-90" aria-label="Webnibo Homepage">
+              <img src="/webnibo.png" alt="Webnibo" className="h-11 sm:h-12 md:h-14 w-auto object-contain" />
             </Link>
           </div>
 
-          {/* 2. Category Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 shrink-0">
-            {[
-              { label: 'Home', value: 'All products', icon: Home, isHome: true },
-              { label: 'Tiles', value: 'Tiles', icon: Grid3x3 },
-              { label: 'Real Estate', value: 'Real Estate', icon: Home },
-              { label: 'Furniture', value: 'Furniture', icon: Sofa },
-              { label: 'Industrial', value: 'Industrial', icon: Factory },
-              { label: 'Cars & Bikes', value: 'Cars & Bikes', icon: Car },
-            ].map((item) => {
-              const isActive = activeCategory === item.value;
+          <nav className="hidden lg:flex items-center gap-1 shrink-0">
+            {navLinks.map((item) => {
               const IconComponent = item.icon;
+              const isActive = activeCategory === item.value;
               return item.isHome ? (
                 <Link
                   key={item.label}
                   href="/"
-                  className="group relative flex flex-col items-center justify-center rounded-2xl px-3 xl:px-3.5 py-1.5 transition-all duration-200 text-slate-700 hover:text-[#f97316] hover:bg-slate-50/80"
+                  className="group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-orange-600"
                 >
-                  <IconComponent className="h-5 w-5 transition-transform duration-200 group-hover:scale-105 stroke-[1.8] text-slate-700 group-hover:text-[#f97316]" />
-                  <span className="mt-0.5 text-xs font-medium text-slate-700 transition-colors duration-200 group-hover:text-[#f97316]">
-                    {item.label}
-                  </span>
-                  <span className="mt-1 h-[2.5px] w-7 rounded-full bg-transparent" />
+                  <IconComponent className="h-4 w-4 transition-colors group-hover:text-orange-600" />
+                  {item.label}
                 </Link>
               ) : (
                 <button
                   type="button"
                   key={item.label}
-                  onClick={() => {
-                    setActiveCategory(item.value);
-                  }}
-                  className={`group relative flex flex-col items-center justify-center rounded-2xl px-3 xl:px-3.5 py-1.5 transition-all duration-200 ${
+                  onClick={() => setActiveCategory(item.value)}
+                  className={`group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
                     isActive
-                      ? 'bg-[#fff5ee]'
-                      : 'text-slate-700 hover:text-[#f97316] hover:bg-slate-50/80'
+                      ? 'bg-orange-50 text-orange-600'
+                      : 'text-slate-700 hover:bg-slate-100 hover:text-orange-600'
                   }`}
                 >
-                  <IconComponent
-                    className={`h-5 w-5 transition-transform duration-200 group-hover:scale-105 stroke-[1.8] ${
-                      isActive ? 'text-[#f97316]' : 'text-slate-700 group-hover:text-[#f97316]'
-                    }`}
-                  />
-                  <span
-                    className={`mt-0.5 text-xs transition-colors duration-200 ${
-                      isActive
-                        ? 'font-semibold text-[#f97316]'
-                        : 'font-medium text-slate-700 group-hover:text-[#f97316]'
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                  <span
-                    className={`mt-1 h-[2.5px] w-7 rounded-full transition-all duration-200 ${
-                      isActive ? 'bg-[#f97316]' : 'bg-transparent'
-                    }`}
-                  />
+                  <IconComponent className={`h-4 w-4 ${isActive ? 'text-orange-600' : ''} transition-colors group-hover:text-orange-600`} />
+                  {item.label}
                 </button>
               );
             })}
           </nav>
 
-          {/* 3. Search Bar */}
-          <div className="flex-1 max-w-xs sm:max-w-sm lg:flex-none lg:w-[330px] xl:w-[410px] shrink-0 min-w-0">
+          <div className="flex-1 max-w-xs sm:max-w-sm lg:flex-none lg:w-[340px] xl:w-[400px] shrink-0 min-w-0">
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="relative flex w-full items-center rounded-full border border-slate-200/80 bg-[#f4f7fb] p-1 pl-3.5 sm:pl-4 transition-all focus-within:border-orange-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-100 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              className="relative flex w-full items-center rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-4 pr-1.5 transition-all focus-within:border-orange-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-100"
             >
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search templates, graphics, and more..."
-                className="h-8 sm:h-9 w-full min-w-0 bg-transparent px-1 sm:px-1.5 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 outline-none"
+                placeholder="Search templates..."
+                className="h-7 w-full min-w-0 bg-transparent pr-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
               />
               <button
                 type="submit"
                 aria-label="Search"
-                className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-[#ff6200] text-white shadow-sm shadow-orange-500/25 transition hover:scale-105 active:scale-95"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-900 text-white transition hover:bg-slate-800 active:scale-95"
               >
-                <Search className="h-4 w-4 stroke-[2.3]" />
+                <Search className="h-4 w-4" />
               </button>
             </form>
           </div>
 
-          {/* 4. Actions: Divider + Cart + Admin/Account Button */}
-          <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 shrink-0">
-            <div className="hidden sm:block h-6 w-[1px] bg-slate-200 mx-0.5" />
-
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="hidden sm:block h-6 w-px bg-slate-200" />
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#f0f4f9] text-slate-700 transition hover:bg-slate-200/80 hover:text-slate-900 active:scale-95"
+              className="relative grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-700 transition hover:bg-slate-200 hover:text-slate-900 active:scale-95"
               aria-label="Open shopping cart"
             >
-              <ShoppingCart className="h-5 w-5 stroke-[1.8]" />
-              <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-[#ff5500] text-[11px] font-bold text-white shadow-sm ring-2 ring-white">
-                {cartCount}
-              </span>
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[11px] font-bold text-white shadow-sm ring-2 ring-white">
+                  {cartCount}
+                </span>
+              )}
             </button>
-
             <Link
               href="/admin"
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#f0f4f9] text-slate-700 transition hover:bg-slate-200/80 hover:text-slate-900 active:scale-95"
+              className="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-700 transition hover:bg-slate-200 hover:text-slate-900 active:scale-95"
               aria-label="Admin / User Account"
-              title="Admin Panel & Account"
             >
-              <User className="h-5 w-5 stroke-[1.8]" />
+              <User className="h-5 w-5" />
             </Link>
           </div>
         </div>
 
-
-        {/* Mobile Drawer */}
         {menuOpen && (
-          <div className="lg:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-4 py-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 animate-fade-in">
             <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: 'Home', value: 'All products', icon: Home, isHome: true },
-                { label: 'Tiles', value: 'Tiles', icon: Grid3x3 },
-                { label: 'Real Estate', value: 'Real Estate', icon: Home },
-                { label: 'Furniture', value: 'Furniture', icon: Sofa },
-                { label: 'Industrial', value: 'Industrial', icon: Factory },
-                { label: 'Cars & Bikes', value: 'Cars & Bikes', icon: Car },
-              ].map((item) => {
-                const isActive = activeCategory === item.value;
+              {navLinks.map((item) => {
                 const IconComponent = item.icon;
+                const isActive = activeCategory === item.value;
                 return item.isHome ? (
                   <Link
                     key={item.label}
                     href="/"
-                    className="flex flex-col items-center justify-center rounded-xl p-3 text-center transition bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-slate-50 text-slate-700 transition hover:bg-slate-100"
                   >
-                    <IconComponent className="h-5 w-5 mb-1 text-slate-700" />
+                    <IconComponent className="h-5 w-5 mb-1" />
                     <span className="text-xs">{item.label}</span>
                   </Link>
                 ) : (
                   <button
                     type="button"
                     key={item.label}
-                    onClick={() => {
-                      setActiveCategory(item.value);
-                      setMenuOpen(false);
-                    }}
-                    className={`flex flex-col items-center justify-center rounded-xl p-3 text-center transition ${
-                      isActive
-                        ? 'bg-[#fff5ee] text-[#f97316] font-semibold'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                    onClick={() => { setActiveCategory(item.value); setMenuOpen(false); }}
+                    className={`flex flex-col items-center justify-center rounded-xl p-3 transition ${
+                      isActive ? 'bg-orange-50 text-orange-600 font-semibold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    <IconComponent className={`h-5 w-5 mb-1 ${isActive ? 'text-[#f97316]' : 'text-slate-700'}`} />
+                    <IconComponent className={`h-5 w-5 mb-1 ${isActive ? 'text-orange-600' : ''}`} />
                     <span className="text-xs">{item.label}</span>
                   </button>
                 );
               })}
             </div>
-            {/* Quick Contact Support in Mobile Drawer */}
-            <div className="mt-4 pt-3 border-t border-slate-200/80 flex flex-col gap-2 text-xs">
-              <a
-                href="mailto:support.webnibo@gmail.com"
-                className="flex items-center gap-2 text-slate-700 hover:text-amber-600 transition"
-              >
-                <Mail className="h-4 w-4 text-amber-500 shrink-0" />
+            <div className="mt-4 pt-3 border-t border-slate-200 flex flex-col gap-2 text-xs">
+              <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 text-slate-700 hover:text-orange-600 transition">
+                <Mail className="h-4 w-4 text-orange-500 shrink-0" />
                 <span className="truncate">support.webnibo@gmail.com</span>
               </a>
-              <a
-                href="https://wa.me/8801318560039"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-700 hover:text-emerald-600 transition"
-              >
+              <a href="https://wa.me/8801318560039" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-700 hover:text-emerald-600 transition">
                 <WhatsAppIcon className="h-4 w-4 shrink-0" />
                 <span>WhatsApp: 01318560039</span>
               </a>
@@ -583,16 +416,16 @@ function TemplatesCatalogContent() {
         )}
       </header>
 
-      {/* Main Catalog Page Content */}
-      <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        {/* Breadcrumb Navigation & Template Count */}
+      {/* ===== CATALOG CONTENT ===== */}
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        {/* Breadcrumb */}
         <div className="mb-6 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <Link href="/" className="hover:text-slate-900 transition flex items-center gap-1">
               <Home className="h-3.5 w-3.5" />
               <span>Home</span>
             </Link>
-            <span>/</span>
+            <ChevronRight className="h-3 w-3" />
             <span className="font-semibold text-slate-900">Templates</span>
           </div>
           <div className="font-medium">
@@ -600,48 +433,46 @@ function TemplatesCatalogContent() {
           </div>
         </div>
 
-        <h1 className="sr-only">All Website Templates & Digital Assets</h1>
+        <h1 className="sr-only">All Website Templates &amp; Digital Assets</h1>
+
+        {/* Page Title */}
+        <div className="mb-8">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-600">
+            <Sparkles className="h-3 w-3" />
+            Template Catalog
+          </p>
+          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            All Templates
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">Browse our complete collection of premium website templates and digital assets.</p>
+        </div>
 
         {/* Sticky Filter Bar */}
-        <div className="mb-8 sticky top-16 sm:top-[68px] z-20 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md p-3 shadow-sm transition-shadow duration-200 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setActiveCategory('All products')}
-              className={`whitespace-nowrap px-3.5 py-2 text-xs font-semibold rounded-lg transition ${
-                activeCategory === 'All products'
-                  ? 'bg-amber-50 text-amber-800'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              All products
-            </button>
-            {activeCategory !== 'All products' && (
-              <>
-                <span className="text-slate-300">/</span>
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
-                  <span>{activeCategory}</span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveCategory('All products')}
-                    className="rounded p-0.5 hover:bg-amber-100 transition text-amber-800"
-                    title="Clear category filter"
-                    aria-label="Clear category filter"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              </>
-            )}
+        <div className="mb-8 sticky top-[64px] z-30 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+            {CATEGORY_LABELS.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={`whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-semibold transition ${
+                  activeCategory === cat
+                    ? 'bg-orange-500 text-white shadow-sm shadow-orange-500/30'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setFreeOnly(!freeOnly)}
-              className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-normal transition ${
+              className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition ${
                 freeOnly
-                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 font-medium'
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold'
                   : 'border-slate-200 text-slate-700 hover:border-slate-300'
               }`}
             >
@@ -653,7 +484,7 @@ function TemplatesCatalogContent() {
               <select
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value)}
-                className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-8 pr-7 text-xs font-medium text-slate-800 outline-none transition focus:border-amber-500"
+                className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-8 pr-7 text-xs font-medium text-slate-800 outline-none transition focus:border-orange-500"
               >
                 <option>Featured</option>
                 <option>Price: low to high</option>
@@ -664,9 +495,9 @@ function TemplatesCatalogContent() {
           </div>
         </div>
 
-        {/* 5-Column Responsive Product Grid */}
+        {/* Product Grid */}
         {filteredProducts.length ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -683,12 +514,8 @@ function TemplatesCatalogContent() {
             <p className="mt-1 text-sm text-slate-500">Try choosing another category or clearing your search term.</p>
             <button
               type="button"
-              onClick={() => {
-                setActiveCategory('All products');
-                setFreeOnly(false);
-                setQuery('');
-              }}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-400 hover:text-slate-950"
+              onClick={() => { setActiveCategory('All products'); setFreeOnly(false); setQuery(''); }}
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-500"
             >
               Reset Filters
             </button>
@@ -696,12 +523,16 @@ function TemplatesCatalogContent() {
         )}
       </div>
 
-      {/* Newsletter */}
-      <section className="bg-[#1949c6] px-5 py-14 text-white mt-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">The good stuff, weekly</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">New products, fresh inspiration.</h2>
-          <p className="mx-auto mt-3 max-w-lg text-blue-100">A short, useful email with our newest finds. No noise, just the good stuff.</p>
+      {/* ===== NEWSLETTER ===== */}
+      <section className="relative overflow-hidden bg-slate-900 py-14">
+        <div className="pointer-events-none absolute -left-20 top-0 h-80 w-80 rounded-full bg-orange-500/20 blur-3xl" />
+        <div className="relative mx-auto max-w-2xl px-4 text-center">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-300 backdrop-blur-md">
+            <Mail className="h-3 w-3" />
+            The good stuff, weekly
+          </p>
+          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl">New products, fresh inspiration.</h2>
+          <p className="mx-auto mt-3 max-w-lg text-slate-300">A short, useful email with our newest finds. No noise, just the good stuff.</p>
           <form onSubmit={handleNewsletterSubmit} className="mx-auto mt-7 flex max-w-md flex-col gap-2 sm:flex-row">
             <input
               type="email"
@@ -709,53 +540,44 @@ function TemplatesCatalogContent() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Your email address"
               aria-label="Your email address"
-              className="h-11 flex-1 rounded-lg border-0 px-4 text-sm text-slate-900 outline-none ring-2 ring-transparent focus:ring-white/50"
+              className="h-12 flex-1 rounded-xl border border-white/20 bg-white/10 px-4 text-sm text-white placeholder:text-slate-400 outline-none ring-2 ring-transparent backdrop-blur-md focus:ring-orange-500/50 focus:border-orange-500/50"
             />
             <button
               type="submit"
               disabled={newsletterState === 'loading'}
-              className="h-11 rounded-lg bg-amber-300 px-5 text-sm font-normal text-slate-900 transition hover:bg-amber-200 disabled:opacity-60"
+              className="h-12 rounded-xl bg-orange-500 px-5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 disabled:opacity-60"
             >
               {newsletterState === 'loading' ? 'Joining...' : 'Subscribe'}
             </button>
           </form>
           {newsletterState === 'success' && (
-            <p className="mt-3 flex items-center justify-center gap-1 text-sm text-green-200">
+            <p className="mt-3 flex items-center justify-center gap-1 text-sm text-emerald-400">
               <Check className="h-4 w-4" /> You are on the list.
             </p>
           )}
           {newsletterState === 'error' && (
-            <p className="mt-3 text-sm text-amber-200">Please enter a valid email and try again.</p>
+            <p className="mt-3 text-sm text-amber-300">Please enter a valid email and try again.</p>
           )}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#102c3b] px-4 sm:px-6 lg:px-8 py-12 text-slate-300">
-        <div className="mx-auto max-w-[1720px]">
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+      {/* ===== FOOTER ===== */}
+      <footer className="bg-slate-950 px-4 sm:px-6 lg:px-8 py-14 text-slate-400">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
             <div>
               <Link href="/" className="inline-flex items-center transition hover:opacity-90" aria-label="Webnibo Homepage">
                 <img src="/webnibo.png" alt="Webnibo" className="h-10 w-auto object-contain" />
               </Link>
-              <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
+              <p className="mt-4 max-w-xs text-sm leading-6 text-slate-500">
                 A carefully curated marketplace for the people building what comes next.
               </p>
-              {/* Official Contact Details */}
-              <div className="mt-5 space-y-2.5 text-xs text-slate-300">
-                <a
-                  href="mailto:support.webnibo@gmail.com"
-                  className="flex items-center gap-2 transition hover:text-amber-400"
-                >
-                  <Mail className="h-4 w-4 text-amber-400 shrink-0" />
+              <div className="mt-5 space-y-2.5 text-xs text-slate-400">
+                <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 transition hover:text-orange-400">
+                  <Mail className="h-4 w-4 text-orange-400 shrink-0" />
                   <span>support.webnibo@gmail.com</span>
                 </a>
-                <a
-                  href="https://wa.me/8801318560039"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 transition hover:text-emerald-400"
-                >
+                <a href="https://wa.me/8801318560039" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-emerald-400">
                   <WhatsAppIcon className="h-4 w-4 shrink-0" />
                   <span>WhatsApp: 01318560039</span>
                 </a>
@@ -768,29 +590,20 @@ function TemplatesCatalogContent() {
               ['Support', 'Help center', 'WhatsApp: 01318560039', 'support.webnibo@gmail.com'],
             ].map(([heading, ...links]) => (
               <div key={heading}>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-white">{heading}</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-white">{heading}</h3>
                 <ul className="mt-4 space-y-3 text-sm">
                   {links.map((link) => {
                     if (link.includes('@')) {
                       return (
                         <li key={link}>
-                          <a href={`mailto:${link}`} className="transition hover:text-amber-400 truncate block">
-                            {link}
-                          </a>
+                          <a href={`mailto:${link}`} className="transition hover:text-white truncate block">{link}</a>
                         </li>
                       );
                     }
                     if (link.includes('WhatsApp')) {
                       return (
                         <li key={link}>
-                          <a
-                            href="https://wa.me/8801318560039"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="transition hover:text-emerald-400 block"
-                          >
-                            {link}
-                          </a>
+                          <a href="https://wa.me/8801318560039" target="_blank" rel="noopener noreferrer" className="transition hover:text-emerald-400 block">{link}</a>
                         </li>
                       );
                     }
@@ -822,13 +635,18 @@ function TemplatesCatalogContent() {
         </div>
       </footer>
 
-      {/* Quick View Modal */}
+      {/* ===== QUICK VIEW MODAL ===== */}
       {previewProduct && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-label={`${previewProduct.title} preview`}>
-          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
-            <div className="relative aspect-[2/1] overflow-hidden bg-slate-900 sm:rounded-t-2xl flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 p-0 backdrop-blur-sm sm:items-center sm:p-5 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${previewProduct.title} preview`}
+        >
+          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl animate-scale-in">
+            <div className="relative aspect-[2/1] overflow-hidden bg-slate-100 sm:rounded-t-2xl flex items-center justify-center">
               {previewProduct.imageFit === 'contain' && (
-                <img src={previewProduct.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-25 blur-md scale-110 pointer-events-none" />
+                <img src={previewProduct.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-20 blur-md scale-110 pointer-events-none" />
               )}
               <img
                 src={previewProduct.image}
@@ -840,15 +658,20 @@ function TemplatesCatalogContent() {
                 }}
                 className="relative z-10 h-full w-full"
               />
-              <button type="button" onClick={() => setPreviewProduct(null)} aria-label="Close product preview" className="absolute right-4 top-4 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-slate-700 shadow">
-                <X className="h-4 w-4" />
+              <button
+                type="button"
+                onClick={() => setPreviewProduct(null)}
+                aria-label="Close product preview"
+                className="absolute right-4 top-4 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition hover:bg-white"
+              >
+                <X className="h-4 w-4 text-slate-700" />
               </button>
             </div>
             <div className="p-6 sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">{previewProduct.category} template</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-orange-600">{previewProduct.category} template</p>
               <div className="mt-2 flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-900">{previewProduct.title}</h2>
+                  <h2 className="font-heading text-2xl font-bold text-slate-900">{previewProduct.title}</h2>
                   <p className="mt-1 text-sm text-slate-500">{previewProduct.type}</p>
                 </div>
                 <span className="text-xl font-bold text-slate-900">{previewProduct.free ? 'Free' : `$${previewProduct.price}`}</span>
@@ -858,17 +681,16 @@ function TemplatesCatalogContent() {
                 <button
                   type="button"
                   onClick={() => addToCart(previewProduct)}
-                  className="group/modal-btn inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-amber-400 px-5 text-sm font-medium text-slate-950 shadow-sm transition-all duration-200 hover:bg-amber-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
+                  className="group/modal-btn inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-orange-600 hover:shadow-md active:scale-[0.99]"
                 >
-                  <ShoppingCart className="h-4 w-4 transition-transform duration-200 group-hover/modal-btn:scale-110" />
+                  <ShoppingCart className="h-4 w-4 transition-transform group-hover/modal-btn:scale-110" />
                   {previewProduct.free ? 'Get free template' : 'Add to cart'}
                 </button>
                 <a
                   href={`https://wa.me/8801318560039?text=${encodeURIComponent(`Hello! I am interested in "${previewProduct.title}" (${previewProduct.type}) - ${previewProduct.free ? 'Free' : `$${previewProduct.price}`}. Could you provide more details?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="Inquire on WhatsApp"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-50 px-4 text-sm font-medium text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-50 px-4 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
                 >
                   <WhatsAppIcon className="h-4 w-4" />
                   <span>WhatsApp</span>
@@ -877,11 +699,10 @@ function TemplatesCatalogContent() {
                   href={`/preview/${previewProduct.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 px-5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:border-slate-300 hover:text-amber-700 shadow-sm active:scale-[0.99]"
-                  title="Open live preview in new tab"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-[0.99]"
                 >
                   <span>Live Preview</span>
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="h-4 w-4 text-orange-500" />
                 </a>
               </div>
             </div>
@@ -889,16 +710,19 @@ function TemplatesCatalogContent() {
         </div>
       )}
 
-      {/* Cart Drawer & Checkout */}
+      {/* ===== CART DRAWER ===== */}
       {cartOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/40" onClick={() => setCartOpen(false)}>
-          <aside onClick={(e) => e.stopPropagation()} className="fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-200">
+        <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm animate-fade-in" onClick={() => setCartOpen(false)}>
+          <aside
+            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-2xl animate-slide-in-right"
+          >
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5">
               <div className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5 text-slate-900" />
-                <h2 className="text-lg font-bold text-slate-900">Your Cart ({cartCount})</h2>
+                <h2 className="font-heading text-lg font-bold text-slate-900">Your Cart ({cartCount})</h2>
               </div>
-              <button type="button" onClick={() => setCartOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition" aria-label="Close cart">
+              <button type="button" onClick={() => setCartOpen(false)} className="grid h-9 w-9 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" aria-label="Close cart">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -907,9 +731,9 @@ function TemplatesCatalogContent() {
                 <div className="grid h-16 w-16 place-items-center rounded-2xl bg-slate-100 text-slate-400">
                   <ShoppingCart className="h-8 w-8" />
                 </div>
-                <h3 className="mt-4 font-bold text-slate-900">Your cart is empty</h3>
+                <h3 className="mt-4 font-heading font-bold text-slate-900">Your cart is empty</h3>
                 <p className="mt-1 text-sm text-slate-500">Discover handpicked website templates to get started.</p>
-                <button type="button" onClick={() => setCartOpen(false)} className="mt-6 rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-amber-300 shadow-sm">
+                <button type="button" onClick={() => setCartOpen(false)} className="mt-6 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 shadow-sm">
                   Continue Shopping
                 </button>
               </div>
@@ -932,59 +756,26 @@ function TemplatesCatalogContent() {
                               <Plus className="h-3.5 w-3.5 text-slate-600" />
                             </button>
                           </div>
-                          <span className="text-sm font-black text-slate-900">${item.product.price * item.quantity}</span>
+                          <span className="text-sm font-bold text-slate-900">${item.product.price * item.quantity}</span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="border-t border-slate-200 bg-slate-50/80 p-6 space-y-4">
-                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={couponCodeInput}
-                      onChange={(e) => setCouponCodeInput(e.target.value)}
-                      placeholder="Coupon code (e.g. SAVE20)"
-                      className="flex-1 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-900 placeholder:text-slate-400 outline-none uppercase tracking-wider focus:border-amber-500"
-                    />
-                    <button type="submit" className="rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-slate-800">
-                      Apply
-                    </button>
-                  </form>
-                  {couponFeedback && (
-                    <p className={`text-xs ${couponFeedback.type === 'success' ? 'text-emerald-700 font-semibold' : 'text-rose-600'}`}>
-                      {couponFeedback.msg}
-                    </p>
-                  )}
-                  <div className="space-y-1.5 text-xs text-slate-600 border-t border-slate-200 pt-3">
-                    <div className="flex justify-between">
-                      <span>Subtotal</span>
-                      <span className="font-semibold text-slate-900">${cartTotal.toFixed(2)}</span>
-                    </div>
-                    {appliedCoupon && (
-                      <div className="flex justify-between text-emerald-700 font-medium">
-                        <span>Coupon ({appliedCoupon.code})</span>
-                        <span>-${discountAmount.toFixed(2)}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between text-sm font-black text-slate-900 border-t border-slate-200 pt-2">
-                      <span>Total</span>
-                      <span>${finalTotal.toFixed(2)}</span>
-                    </div>
+                  <div className="flex justify-between text-base font-bold text-slate-900">
+                    <span>Total</span>
+                    <span>${cartTotal}</span>
                   </div>
                   <a
                     href={`https://wa.me/8801318560039?text=${encodeURIComponent(
                       `Hello Webnibo! I want to order the following items from my cart:\n\n` +
-                        cart
-                          .map(
-                            (item) => `• ${item.product.title} (x${item.quantity}) - $${item.product.price * item.quantity}`
-                          )
-                          .join('\n') +
-                        `\n\nTotal: $${finalTotal.toFixed(2)}\n\nPlease confirm availability!`
+                        cart.map((item) => `• ${item.product.title} (x${item.quantity}) - $${item.product.price * item.quantity}`).join('\n') +
+                        `\n\nTotal: $${cartTotal}\n\nPlease confirm availability!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-400 text-center text-sm font-bold text-slate-950 shadow-md shadow-amber-400/20 transition hover:bg-amber-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 text-center text-sm font-semibold text-white shadow-md shadow-orange-500/20 transition hover:bg-orange-600 hover:shadow-lg active:scale-[0.99]"
                   >
                     <WhatsAppIcon className="h-5 w-5" />
                     <span>Send message in WhatsApp</span>
@@ -995,136 +786,13 @@ function TemplatesCatalogContent() {
           </aside>
         </div>
       )}
-
-      {/* Checkout Modal */}
-      {checkoutOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div>
-                <h3 className="text-xl font-black text-slate-900">Complete Purchase</h3>
-                <p className="text-xs text-slate-500">Instant digital download after payment</p>
-              </div>
-              <button type="button" onClick={() => setCheckoutOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={handleProcessCheckout} className="mt-5 space-y-4">
-              <div>
-                <label className="text-xs font-bold text-slate-700">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={checkoutName}
-                  onChange={(e) => setCheckoutName(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:border-amber-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-700">Email Address (Downloads sent here)</label>
-                <input
-                  type="email"
-                  required
-                  value={checkoutEmail}
-                  onChange={(e) => setCheckoutEmail(e.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:border-amber-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-700">Payment Method</label>
-                <div className="mt-1.5 grid grid-cols-3 gap-2">
-                  {(['Credit Card', 'Stripe', 'PayPal'] as const).map((method) => (
-                    <button
-                      type="button"
-                      key={method}
-                      onClick={() => setCheckoutPayment(method)}
-                      className={`flex flex-col items-center justify-center rounded-xl border p-2.5 text-xs font-bold transition ${
-                        checkoutPayment === method
-                          ? 'border-amber-500 bg-amber-50/50 text-amber-900 ring-2 ring-amber-400/20'
-                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <CreditCard className="h-4 w-4 mb-1" />
-                      <span>{method}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-xl bg-slate-50 p-4 border border-slate-100 space-y-1 text-xs">
-                <div className="flex justify-between text-slate-600">
-                  <span>Items:</span>
-                  <span>{cartCount} templates</span>
-                </div>
-                <div className="flex justify-between font-black text-slate-900 text-sm pt-1 border-t border-slate-200">
-                  <span>Amount to pay:</span>
-                  <span className="text-emerald-700">${finalTotal.toFixed(2)}</span>
-                </div>
-              </div>
-              <button
-                type="submit"
-                disabled={checkoutLoading}
-                className="w-full rounded-xl bg-amber-400 py-3.5 text-sm font-bold text-slate-950 shadow-md shadow-amber-400/30 transition hover:bg-amber-300 disabled:opacity-50"
-              >
-                {checkoutLoading ? 'Processing Order...' : `Pay $${finalTotal.toFixed(2)} & Download`}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Order Success Receipt */}
-      {orderReceipt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 text-center shadow-2xl">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-100 text-emerald-600">
-              <CheckCircle2 className="h-8 w-8" />
-            </div>
-            <h3 className="mt-4 text-xl font-black text-slate-900">Order Completed!</h3>
-            <p className="mt-1 text-xs text-slate-500">Thank you for your purchase.</p>
-            <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-left text-xs space-y-1.5">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Order ID:</span>
-                <span className="font-mono font-bold text-slate-900">{orderReceipt.id}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Customer:</span>
-                <span className="font-semibold text-slate-900">{orderReceipt.customerName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Amount Paid:</span>
-                <span className="font-extrabold text-emerald-700">${orderReceipt.amount}</span>
-              </div>
-            </div>
-            <div className="mt-6 flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  alert('Thank you! Your template files are downloading.');
-                  setOrderReceipt(null);
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
-              >
-                <Download className="h-4 w-4" />
-                <span>Download Template Assets</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setOrderReceipt(null)}
-                className="rounded-xl border border-slate-200 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                Close Receipt
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
 
 export default function TemplatesCatalogPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f1f9fc] flex items-center justify-center text-slate-500 text-sm">Loading templates catalog...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500 text-sm">Loading templates catalog...</div>}>
       <TemplatesCatalogContent />
     </Suspense>
   );
