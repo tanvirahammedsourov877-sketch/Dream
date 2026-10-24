@@ -200,7 +200,7 @@ function ProductCard({ product, onPreview, onAdd }: { product: Product; onPrevie
   const [liked, setLiked] = useState(false);
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] card-hover hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-orange-200">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] card-hover hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-200">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         {product.imageFit === 'contain' && (
           <img
@@ -261,7 +261,7 @@ function ProductCard({ product, onPreview, onAdd }: { product: Product; onPrevie
         <div>
           <h3
             onClick={() => onPreview(product)}
-            className="line-clamp-2 cursor-pointer text-sm font-semibold leading-snug text-slate-900 transition hover:text-orange-600"
+            className="line-clamp-2 cursor-pointer text-sm font-semibold leading-snug text-slate-900 transition hover:text-blue-700"
             title={product.title}
           >
             {product.title}
@@ -272,7 +272,7 @@ function ProductCard({ product, onPreview, onAdd }: { product: Product; onPrevie
         <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
+              <Star key={i} className="h-3 w-3 fill-cyan-400 text-cyan-400" />
             ))}
             <span className="ml-1 text-[11px] font-semibold text-slate-600">4.9</span>
           </div>
@@ -285,7 +285,7 @@ function ProductCard({ product, onPreview, onAdd }: { product: Product; onPrevie
           <button
             type="button"
             onClick={() => onAdd(product)}
-            className="group/btn flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-orange-500 text-xs font-semibold text-white shadow-sm shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/30 active:scale-[0.98]"
+            className="group/btn flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-blue-600 text-xs font-semibold text-white shadow-sm shadow-blue-600/20 transition-all hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/30 active:scale-[0.98]"
           >
             <ShoppingCart className="h-3.5 w-3.5 transition-transform group-hover/btn:scale-110" />
             {product.free ? 'Get Free' : 'Add to Cart'}
@@ -331,7 +331,7 @@ function SectionHeading({
     >
       <div className={center ? 'max-w-2xl mx-auto' : ''}>
         {eyebrow && (
-          <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-600">
+          <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
             <Sparkles className="h-3 w-3" />
             {eyebrow}
           </p>
@@ -346,7 +346,7 @@ function SectionHeading({
           {actionHref ? (
             <Link
               href={actionHref}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 transition hover:text-orange-700"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 transition hover:text-orange-700"
             >
               <span>{action}</span>
               <ChevronRight className="h-4 w-4" />
@@ -355,7 +355,7 @@ function SectionHeading({
             <button
               type="button"
               onClick={onActionClick}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 transition hover:text-orange-700"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 transition hover:text-orange-700"
             >
               <span>{action}</span>
               <ChevronRight className="h-4 w-4" />
@@ -514,18 +514,18 @@ export default function MarketplaceHome() {
                   key={item.label}
                   href="#top"
                   onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-orange-600"
+                  className="group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-blue-700"
                 >
-                  <IconComponent className="h-4 w-4 transition-colors group-hover:text-orange-600" />
+                  <IconComponent className="h-4 w-4 transition-colors group-hover:text-blue-700" />
                   {item.label}
                 </a>
               ) : (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-orange-600"
+                  className="group relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-blue-700"
                 >
-                  <IconComponent className="h-4 w-4 transition-colors group-hover:text-orange-600" />
+                  <IconComponent className="h-4 w-4 transition-colors group-hover:text-blue-700" />
                   {item.label}
                 </Link>
               );
@@ -539,7 +539,7 @@ export default function MarketplaceHome() {
                 if (query.trim()) window.location.href = `/templates?q=${encodeURIComponent(query.trim())}`;
                 else window.location.href = '/templates';
               }}
-              className="relative flex w-full items-center rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-4 pr-1.5 transition-all focus-within:border-orange-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-100"
+              className="relative flex w-full items-center rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-4 pr-1.5 transition-all focus-within:border-cyan-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100"
             >
               <input
                 value={query}
@@ -567,7 +567,7 @@ export default function MarketplaceHome() {
             >
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[11px] font-bold text-white shadow-sm ring-2 ring-white">
+                <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-blue-600 text-[11px] font-bold text-white shadow-sm ring-2 ring-white">
                   {cartCount}
                 </span>
               )}
@@ -612,8 +612,8 @@ export default function MarketplaceHome() {
               })}
             </div>
             <div className="mt-4 pt-3 border-t border-slate-200 flex flex-col gap-2 text-xs">
-              <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 text-slate-700 hover:text-orange-600 transition">
-                <Mail className="h-4 w-4 text-orange-500 shrink-0" />
+              <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 text-slate-700 hover:text-blue-700 transition">
+                <Mail className="h-4 w-4 text-blue-600 shrink-0" />
                 <span className="truncate">support.webnibo@gmail.com</span>
               </a>
               <a href="https://wa.me/8801318560039" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-700 hover:text-emerald-600 transition">
@@ -628,97 +628,66 @@ export default function MarketplaceHome() {
       {/* ===== HERO ===== */}
       <section
         id="top"
-        className="relative isolate z-0 min-h-[600px] sm:min-h-[640px] lg:min-h-[680px] overflow-hidden bg-slate-950 text-white flex items-center"
+        className="relative isolate overflow-hidden bg-[#f8fafc] text-[#0b1020]"
         onMouseEnter={() => setIsCarouselPaused(true)}
         onMouseLeave={() => setIsCarouselPaused(false)}
       >
-        {HERO_SLIDES.map((slide, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-              }`}
-            >
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className={`h-full w-full object-cover transition-transform duration-[2000ms] ease-out ${
-                  isActive ? 'scale-105' : 'scale-100'
-                }`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/40" />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-transparent" />
-            </div>
-          );
-        })}
-
-        <div className="pointer-events-none absolute -left-20 top-1/4 h-96 w-96 rounded-full bg-orange-500/15 blur-3xl z-10 animate-pulse-glow" />
-        <div className="pointer-events-none absolute right-10 bottom-1/4 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl z-10" />
-
-        <div className="relative z-20 mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-20 w-full">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-md">
-              <Sparkles className="h-3.5 w-3.5 text-orange-400" />
+        <div className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-[#38bdf8]/15 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-full bg-[#1d4ed8]/10 blur-3xl" />
+        <div className="mx-auto grid max-w-[1600px] items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:py-24">
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#bfdbfe] bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#1d4ed8] shadow-sm">
+              <Sparkles className="h-3.5 w-3.5" />
               {HERO_SLIDES[currentSlide].tag}
             </div>
-            <h1 className="font-heading text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl drop-shadow-sm animate-fade-up">
-              {HERO_SLIDES[currentSlide].title}
+            <h1 className="font-heading text-5xl font-extrabold leading-[1.03] tracking-[-0.06em] text-[#0b1020] sm:text-6xl lg:text-[76px]">
+              A better website
+              <br />
+              starts <span className="relative inline-block text-[#1d4ed8]">here<span className="absolute -bottom-2 left-1/4 h-2 w-3/4 -rotate-3 rounded-[50%] border-b-4 border-[#38bdf8]" /></span>.
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <p className="mt-7 max-w-xl text-base leading-7 text-[#475569] sm:text-lg">
               {HERO_SLIDES[currentSlide].description}
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              <Link
-                href="/templates"
-                className="group inline-flex items-center gap-2 rounded-xl bg-orange-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-0.5"
-              >
-                {HERO_SLIDES[currentSlide].btnText}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link href="/templates" className="group inline-flex items-center gap-2 rounded-xl bg-[#1d4ed8] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-[#1e40af]">
+                Explore themes <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link
-                href="/templates?category=All+products"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/20"
-              >
-                Browse All
+              <Link href="/templates?category=All+products" className="inline-flex items-center gap-2 rounded-xl border border-[#cbd5e1] bg-white px-6 py-3.5 text-sm font-bold text-[#0b1020] transition hover:border-[#1d4ed8] hover:text-[#1d4ed8]">
+                Our services <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+            <div className="mt-7 flex items-center gap-4 text-sm text-[#475569]">
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map((item) => <div key={item} className="grid h-8 w-8 place-items-center rounded-full border-2 border-white bg-[#dbeafe] text-xs font-bold text-[#1d4ed8]">{item}</div>)}
+                <div className="grid h-8 w-8 place-items-center rounded-full border-2 border-white bg-white text-[#1d4ed8] shadow-sm">+</div>
+              </div>
+              <span><strong className="text-[#0b1020]">12,400+</strong> creators started here</span>
+              <span className="hidden items-center gap-1 font-bold text-blue-600 sm:inline-flex"><Star className="h-4 w-4 fill-current" /> 4.9/5</span>
+            </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={prevSlide}
-          aria-label="Previous slide"
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-orange-500 hover:border-orange-500 hover:scale-110 active:scale-95 sm:left-6"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <button
-          type="button"
-          onClick={nextSlide}
-          aria-label="Next slide"
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-orange-500 hover:border-orange-500 hover:scale-110 active:scale-95 sm:right-6"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-
-        <div className="absolute bottom-6 inset-x-0 z-20 flex items-center justify-center gap-2">
-          {HERO_SLIDES.map((slide, idx) => {
-            const isCurrent = idx === currentSlide;
-            return (
-              <button
-                key={slide.id}
-                type="button"
-                onClick={() => setCurrentSlide(idx)}
-                aria-label={`Go to slide ${idx + 1}: ${slide.tag}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isCurrent ? 'w-8 bg-orange-400' : 'w-2 bg-white/40 hover:bg-white/70 hover:w-4'
-                }`}
-              />
-            );
-          })}
+          <div className="relative min-h-[390px] sm:min-h-[500px] lg:min-h-[580px]">
+            <div className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#bfdbfe] bg-[#eff6ff] shadow-[0_30px_100px_rgba(29,78,216,0.12)]" />
+            {[0, 1, 2].map((offset) => {
+              const slide = HERO_SLIDES[(currentSlide + offset) % HERO_SLIDES.length];
+              return (
+                <div key={slide.id} className={`absolute top-1/2 w-[46%] overflow-hidden rounded-[22px] border border-white bg-white p-2 shadow-[0_24px_55px_rgba(30,64,175,0.18)] transition-all duration-700 ${offset === 0 ? 'left-[7%] -translate-y-1/2 -rotate-6 opacity-90' : offset === 1 ? 'left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 scale-110' : 'right-[7%] -translate-y-1/2 rotate-6 opacity-90'}`}>
+                  <div className="relative aspect-[0.82] overflow-hidden rounded-[16px] bg-[#dbeafe]">
+                    <img src={slide.image} alt={slide.title} className="h-full w-full object-cover opacity-80 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0b1020]/80 via-transparent to-[#38bdf8]/15" />
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-[#bae6fd]">Curated website systems</p>
+                      <p className="mt-1 font-heading text-base font-extrabold sm:text-xl">{slide.category === 'All products' ? 'Digital Marketplace' : slide.category}</p>
+                      <p className="mt-2 text-[10px] text-white/75">Explore collection <ArrowRight className="ml-1 inline h-3 w-3" /></p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            <button type="button" onClick={prevSlide} aria-label="Previous slide" className="absolute bottom-4 left-1/2 z-20 grid h-10 w-10 -translate-x-[130%] place-items-center rounded-full border border-[#dbeafe] bg-white text-[#0b1020] shadow-md transition hover:bg-[#1d4ed8] hover:text-white"><ChevronLeft className="h-4 w-4" /></button>
+            <button type="button" onClick={nextSlide} aria-label="Next slide" className="absolute bottom-4 left-1/2 z-20 grid h-10 w-10 translate-x-[30%] place-items-center rounded-full border border-[#dbeafe] bg-white text-[#0b1020] shadow-md transition hover:bg-[#1d4ed8] hover:text-white"><ChevronRight className="h-4 w-4" /></button>
+            <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 gap-1.5"><span className="h-2 w-6 rounded-full bg-[#1d4ed8]" /><span className="h-2 w-2 rounded-full bg-[#bfdbfe]" /><span className="h-2 w-2 rounded-full bg-[#bfdbfe]" /></div>
+          </div>
         </div>
       </section>
 
@@ -730,7 +699,7 @@ export default function MarketplaceHome() {
               const Icon = stat.icon;
               return (
                 <div key={i} className="flex items-center gap-3 animate-fade-up" style={{ animationDelay: `${i * 0.05}s` }}>
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-orange-50 text-orange-600">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-700">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
@@ -759,12 +728,12 @@ export default function MarketplaceHome() {
               <Link
                 key={cat.label}
                 href={`/templates?category=${encodeURIComponent(cat.label)}`}
-                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm card-hover hover:border-orange-200 hover:shadow-lg animate-fade-up"
+                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm card-hover hover:border-blue-200 hover:shadow-lg animate-fade-up"
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
-                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-50 transition-transform duration-500 group-hover:scale-150" />
+                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-150" />
                 <div className="relative z-10">
-                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-orange-100 to-amber-50 text-orange-600 transition-transform duration-300 group-hover:scale-110">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-blue-100 to-amber-50 text-blue-700 transition-transform duration-300 group-hover:scale-110">
                     <Icon className="h-6 w-6" />
                   </div>
                   <h3 className="mt-4 text-sm font-bold text-slate-900">{cat.label}</h3>
@@ -828,7 +797,7 @@ export default function MarketplaceHome() {
         <div className="mt-12 flex justify-center">
           <Link
             href="/templates"
-            className="group inline-flex items-center gap-2.5 rounded-xl bg-slate-900 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition-all hover:bg-orange-500 hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-0.5"
+            className="group inline-flex items-center gap-2.5 rounded-xl bg-slate-900 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition-all hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5"
           >
             <span>See All Templates</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -851,12 +820,12 @@ export default function MarketplaceHome() {
               return (
                 <div
                   key={i}
-                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 shadow-sm card-hover hover:shadow-xl hover:border-orange-200 animate-fade-up"
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 shadow-sm card-hover hover:shadow-xl hover:border-blue-200 animate-fade-up"
                   style={{ animationDelay: `${i * 0.05}s` }}
                 >
-                  <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-orange-50/80 blur-2xl transition-all duration-500 group-hover:scale-150" />
+                  <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-blue-50/80 blur-2xl transition-all duration-500 group-hover:scale-150" />
                   <div className="relative z-10">
-                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/20 transition-transform duration-300 group-hover:scale-110">
+                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-600 text-white shadow-lg shadow-blue-600/20 transition-transform duration-300 group-hover:scale-110">
                       <Icon className="h-6 w-6" />
                     </div>
                     <h3 className="mt-5 font-heading text-lg font-bold text-slate-900">{feature.title}</h3>
@@ -883,12 +852,12 @@ export default function MarketplaceHome() {
             return (
               <div
                 key={i}
-                className="group relative rounded-2xl border border-slate-200 bg-white p-7 shadow-sm card-hover hover:shadow-xl hover:border-orange-200 animate-fade-up"
+                className="group relative rounded-2xl border border-slate-200 bg-white p-7 shadow-sm card-hover hover:shadow-xl hover:border-blue-200 animate-fade-up"
                 style={{ animationDelay: `${i * 0.08}s` }}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-heading text-3xl font-extrabold text-slate-100 group-hover:text-orange-100 transition-colors">{step.number}</span>
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-orange-50 text-orange-600 transition-transform duration-300 group-hover:scale-110">
+                  <span className="font-heading text-3xl font-extrabold text-slate-100 group-hover:text-blue-100 transition-colors">{step.number}</span>
+                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-blue-700 transition-transform duration-300 group-hover:scale-110">
                     <Icon className="h-5 w-5" />
                   </div>
                 </div>
@@ -908,10 +877,10 @@ export default function MarketplaceHome() {
       {/* ===== CTA / NEWSLETTER ===== */}
       <section className="relative overflow-hidden bg-slate-900 py-16">
         <div className="pointer-events-none absolute inset-0 bg-gradient-mesh opacity-20" />
-        <div className="pointer-events-none absolute -left-20 top-0 h-96 w-96 rounded-full bg-orange-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 top-0 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
         <div className="pointer-events-none absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
         <div className="relative mx-auto max-w-2xl px-4 text-center">
-          <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-300 backdrop-blur-md">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300 backdrop-blur-md">
             <Mail className="h-3 w-3" />
             The good stuff, weekly
           </p>
@@ -928,12 +897,12 @@ export default function MarketplaceHome() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Your email address"
               aria-label="Your email address"
-              className="h-12 flex-1 rounded-xl border border-white/20 bg-white/10 px-4 text-sm text-white placeholder:text-slate-400 outline-none ring-2 ring-transparent backdrop-blur-md focus:ring-orange-500/50 focus:border-orange-500/50"
+              className="h-12 flex-1 rounded-xl border border-white/20 bg-white/10 px-4 text-sm text-white placeholder:text-slate-400 outline-none ring-2 ring-transparent backdrop-blur-md focus:ring-blue-600/50 focus:border-blue-600/50"
             />
             <button
               type="submit"
               disabled={newsletterState === 'loading'}
-              className="h-12 rounded-xl bg-orange-500 px-6 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 disabled:opacity-60"
+              className="h-12 rounded-xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-700 disabled:opacity-60"
             >
               {newsletterState === 'loading' ? 'Joining...' : 'Subscribe'}
             </button>
@@ -944,7 +913,7 @@ export default function MarketplaceHome() {
             </p>
           )}
           {newsletterState === 'error' && (
-            <p className="mt-3 text-sm text-amber-300">Please enter a valid email and try again.</p>
+            <p className="mt-3 text-sm text-cyan-300">Please enter a valid email and try again.</p>
           )}
           <label className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-400">
             <input type="checkbox" className="h-3.5 w-3.5 rounded border-white/30" required />
@@ -965,8 +934,8 @@ export default function MarketplaceHome() {
                 A carefully curated marketplace for the people building what comes next. Premium templates for modern web creators.
               </p>
               <div className="mt-5 space-y-2.5 text-xs text-slate-400">
-                <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 transition hover:text-orange-400">
-                  <Mail className="h-4 w-4 text-orange-400 shrink-0" />
+                <a href="mailto:support.webnibo@gmail.com" className="flex items-center gap-2 transition hover:text-cyan-400">
+                  <Mail className="h-4 w-4 text-cyan-400 shrink-0" />
                   <span>support.webnibo@gmail.com</span>
                 </a>
                 <a href="https://wa.me/8801318560039" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-emerald-400">
@@ -1049,7 +1018,7 @@ export default function MarketplaceHome() {
               </button>
             </div>
             <div className="p-6 sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-wider text-orange-600">{previewProduct.category} template</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">{previewProduct.category} template</p>
               <div className="mt-2 flex items-start justify-between gap-4">
                 <div>
                   <h2 className="font-heading text-2xl font-bold text-slate-900">{previewProduct.title}</h2>
@@ -1062,7 +1031,7 @@ export default function MarketplaceHome() {
                 <button
                   type="button"
                   onClick={() => addToCart(previewProduct)}
-                  className="group/modal-btn inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-orange-600 hover:shadow-md active:scale-[0.99]"
+                  className="group/modal-btn inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.99]"
                 >
                   <ShoppingCart className="h-4 w-4 transition-transform group-hover/modal-btn:scale-110" />
                   {previewProduct.free ? 'Get free template' : 'Add to cart'}
@@ -1084,7 +1053,7 @@ export default function MarketplaceHome() {
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-[0.99]"
                   title="Open live preview in new tab"
                 >
-                  <ExternalLink className="h-4 w-4 text-orange-500" />
+                  <ExternalLink className="h-4 w-4 text-blue-600" />
                   <span>Live preview</span>
                 </a>
               </div>
@@ -1102,7 +1071,7 @@ export default function MarketplaceHome() {
           >
             <div className="flex items-center justify-between border-b border-slate-200 p-5">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-orange-600">Your selection</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">Your selection</p>
                 <h2 className="mt-1 font-heading text-xl font-bold text-slate-900">Shopping cart</h2>
               </div>
               <button
@@ -1130,7 +1099,7 @@ export default function MarketplaceHome() {
                           <button
                             type="button"
                             onClick={() => changeQuantity(product.id, -1)}
-                            className="p-1.5 text-slate-500 hover:text-orange-600 transition"
+                            className="p-1.5 text-slate-500 hover:text-blue-700 transition"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="h-3 w-3" />
@@ -1139,7 +1108,7 @@ export default function MarketplaceHome() {
                           <button
                             type="button"
                             onClick={() => changeQuantity(product.id, 1)}
-                            className="p-1.5 text-slate-500 hover:text-orange-600 transition"
+                            className="p-1.5 text-slate-500 hover:text-blue-700 transition"
                             aria-label="Increase quantity"
                           >
                             <Plus className="h-3 w-3" />
@@ -1161,7 +1130,7 @@ export default function MarketplaceHome() {
                   <button
                     type="button"
                     onClick={() => setCartOpen(false)}
-                    className="mt-5 text-sm font-semibold text-orange-600 hover:text-orange-700"
+                    className="mt-5 text-sm font-semibold text-blue-700 hover:text-orange-700"
                   >
                     Continue browsing
                   </button>
@@ -1182,7 +1151,7 @@ export default function MarketplaceHome() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 text-sm font-semibold text-white shadow-sm transition-all hover:bg-orange-600 hover:shadow-md active:scale-[0.99]"
+                  className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.99]"
                 >
                   <WhatsAppIcon className="h-5 w-5" />
                   <span>Send message in WhatsApp</span>
